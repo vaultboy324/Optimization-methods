@@ -4,6 +4,8 @@ import Table from "../Based_components/Table/Table";
 
 import './Page.css';
 
+const config = require("../../../config/config");
+
 class Page extends React.Component{
     state = {
         matrixColumns: ['x1', 'x2', 'x3', 'x4', 'x5'],
@@ -114,6 +116,28 @@ class Page extends React.Component{
         }
     };
 
+    sendMatrix = async (event) => {
+        let body = {
+            matrix: this.state.matrixRows,
+            result: this.state.resultVector
+        };
+
+        const jsonString = JSON.stringify(body);
+
+        const response = await fetch(`${config.server}/calculate`, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Content-Length': jsonString.length
+            },
+
+            body: jsonString
+        });
+
+        let result = await response.json();
+    };
+
     __parseId = (sId) => {
         return sId.split('|', 3);
     };
@@ -138,6 +162,9 @@ class Page extends React.Component{
                     <div className="Result">
                         <Table columns={this.state.resultColumn} rows={this.state.resultVector} type={this.state.resultType} func={this.updateMatrix}/>
                     </div>
+                </div>
+                <div>
+                    <button className="btn btn btn-outline-primary myBtn" onClick={this.sendMatrix.bind(this)}>Выполнить</button>
                 </div>
             </div>
         )

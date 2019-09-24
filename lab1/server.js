@@ -12,6 +12,10 @@ app.use((req, res, next)=>{
     next();
 });
 
+app.post("/calculate", (req, res)=>{
+   console.log(req.body);
+});
+
 const server = app.listen(process.env.PORT || '5000', () => {
     console.log(`App listen on port ${server.address().PORT}`);
     console.log('Press Ctrl+C to quit');
